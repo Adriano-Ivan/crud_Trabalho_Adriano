@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">crud_Trabalho_Adriano</string>
+    <string name="delete">Delete</string>
+    <string name="adicionar">Adicionar</string>
+    <string name="dialog_title">Item</string>
+    <string name="dialog_teste_message">Aqui ficará o campo de texto</string>
+    <string name="ok">Salvar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="sera_salvo">O item será salvo</string>
+    <string name="nao_sera_salvo">O Item não será salvo</string>
+    <array name="itens">
+
+    </array>
+</resources>
