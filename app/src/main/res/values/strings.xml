@@ -8,6 +8,12 @@
     <string name="cancel">Cancelar</string>
     <string name="sera_salvo">O item será salvo</string>
     <string name="nao_sera_salvo">O Item não será salvo</string>
+    <string name="deletar">Deletar</string>
+    <string name="editar">Editar</string>
+    <string name="dialog_insert_title">Insira um item: </string>
+    <string name="dialog_edit_title">Edite o item: </string>
+    <string name="sera_editado">O conteudo será editado</string>
+    <string name="already_exists">Ja existe</string>
     <array name="itens">
 
     </array>

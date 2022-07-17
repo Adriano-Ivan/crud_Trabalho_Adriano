@@ -7,7 +7,21 @@
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/adicionar"
         app:showAsAction="always"
-
         />
 
+    <item
+        android:id="@+id/context_edit"
+        android:visible="false"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/editar"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/context_delete"
+        android:visible="false"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/deletar"
+        app:showAsAction="always"
+        />
 </menu>

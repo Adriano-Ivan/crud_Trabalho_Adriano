@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -21,15 +22,35 @@ public class DialogToSaveItem extends DialogFragment implements DialogInterface.
 
     private onSaveListener saveListener;
     private onCancelListener cancelListener;
+    private onEditListener editListener;
     private TextView inputItem;
+    private MainActivity.OPERACAO type;
+    private String valueFieldIfIsToEdit;
+
+    public DialogToSaveItem(MainActivity.OPERACAO type){
+
+        this.type = type;
+    }
+
+    public DialogToSaveItem(MainActivity.OPERACAO type, String valueFieldIfIsToEdit){
+        this.type = type;
+        this.valueFieldIfIsToEdit = valueFieldIfIsToEdit;
+    }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.dialog_title)
-                .setMessage(R.string.dialog_teste_message)
-                .setPositiveButton(R.string.ok,this)
+
+        if(type == MainActivity.OPERACAO.INSERT){
+            builder.setTitle(R.string.dialog_insert_title);
+        }
+
+        if(type == MainActivity.OPERACAO.EDIT){
+            builder.setTitle(R.string.dialog_edit_title);
+        }
+
+        builder.setPositiveButton(R.string.ok,this)
                 .setNegativeButton(R.string.cancel,this);
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -38,15 +59,24 @@ public class DialogToSaveItem extends DialogFragment implements DialogInterface.
         builder.setView(layout);
 
         inputItem = layout.findViewById(R.id.input_item);
+        inputItem.setBackgroundColor(Color.parseColor("#EEEEEE"));
+
+        if(valueFieldIfIsToEdit != null){
+            inputItem.setText(valueFieldIfIsToEdit);
+        }
 
         return builder.create();
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        if(which == dialog.BUTTON_POSITIVE){
+        if(which == dialog.BUTTON_POSITIVE && valueFieldIfIsToEdit == null){
             String conteudo = String.valueOf(inputItem.getText());
             saveListener.onSave(getActivity(), conteudo, R.string.sera_salvo);
+        }
+        else if(which == dialog.BUTTON_POSITIVE && valueFieldIfIsToEdit != null){
+            String conteudo = String.valueOf(inputItem.getText());
+            editListener.onEdit(getActivity(),conteudo, R.string.sera_editado);
         }
         else if(which == dialog.BUTTON_NEGATIVE){
             cancelListener.onCancel(getActivity(),R.string.nao_sera_salvo);
@@ -61,6 +91,7 @@ public class DialogToSaveItem extends DialogFragment implements DialogInterface.
                 && context instanceof onSaveListener){
             saveListener = (onSaveListener) context;
             cancelListener = (onCancelListener) context;
+            editListener = (onEditListener) context;
         }
         else {
             throw new RuntimeException("A activity deve implementar as interfaces.");
@@ -73,5 +104,9 @@ public class DialogToSaveItem extends DialogFragment implements DialogInterface.
 
     public interface onSaveListener{
         void onSave(FragmentActivity activity, String conteudo,int mensagem);
+    }
+
+    public interface onEditListener{
+        void onEdit(FragmentActivity activity, String conteudo, int mensagem);
     }
 }

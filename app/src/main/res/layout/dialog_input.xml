@@ -6,5 +6,7 @@
     <EditText
         android:id="@+id/input_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_weight="@integer/material_motion_duration_long_2"
+        android:visibility="visible" />
 </LinearLayout>
