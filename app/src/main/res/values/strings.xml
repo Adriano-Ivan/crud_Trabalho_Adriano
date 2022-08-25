@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">crud_Trabalho_Adriano</string>
+    <string name="app_name">LISTA DE COMPRAS</string>
     <string name="delete">Delete</string>
     <string name="adicionar">Adicionar</string>
     <string name="dialog_title">Item</string>

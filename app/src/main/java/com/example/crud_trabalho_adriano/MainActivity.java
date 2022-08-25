@@ -25,6 +25,9 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.example.crud_trabalho_adriano.data.Tarefa;
+import com.example.crud_trabalho_adriano.data.TarefaDAO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +37,11 @@ public class MainActivity extends AppCompatActivity
         DialogToSaveItem.onSaveListener, AbsListView.MultiChoiceModeListener {
 
     private ListView lista_view;
-    private ArrayAdapter<String> adapter;
+    private ArrayAdapter<Tarefa> adapter;
+    private TarefaDAO tarefaDAO;
     private String [] examples = {};
-    private List<String> listForAdapter = new ArrayList<>();
-    private List<String> selecionados = new ArrayList<>();
+    private List<Tarefa> listForAdapter = new ArrayList<>();
+    private List<Tarefa> selecionados = new ArrayList<>();
     private View menuItemAdd;
     private View menuItemDelete ;
     private View menuItemEdit;
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity
     private boolean mShowEditVisible = true;
     private boolean mShowDeleteVisible = true;
     private int idItemMenu;
-    private String valueToEditItem;
+    private Tarefa valueToEditItem = null;
     private int positionToEdit;
 
     @Override
@@ -54,16 +58,15 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         lista_view =  findViewById(R.id.lista);
+        tarefaDAO = TarefaDAO.getInstance(this);
 
-        addExamplesToList();
+        setInitialRegistersToList();
         adapter = new ArrayAdapter(this,
                 android.R.layout.simple_list_item_1,
                 listForAdapter
                 );
 
-
         lista_view.setAdapter(adapter);
-
 
         lista_view.setMultiChoiceModeListener(this);
         lista_view.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -102,9 +105,10 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void addExamplesToList(){
-        for(String example: examples){
-            listForAdapter.add(example);
+    private void setInitialRegistersToList(){
+        List<Tarefa> tarefas = tarefaDAO.list();
+        for(Tarefa tarefa: tarefas){
+            listForAdapter.add(tarefa);
         }
     }
 
@@ -133,13 +137,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSave(FragmentActivity activity,String nameItem, int mensagem) {
-        if(alreadyExists(nameItem)){
+    public void onSave(FragmentActivity activity,Tarefa tarefa, int mensagem) {
+        if(alreadyExists(tarefa)){
             Toast.makeText(activity, R.string.already_exists, Toast.LENGTH_SHORT).show();
         }
-        else if(nameItem.trim().length() > 0){
+        else if(tarefa.getTexto().trim().length() > 0){
             Toast.makeText(activity, mensagem, Toast.LENGTH_SHORT).show();
-            listForAdapter.add(nameItem);
+            tarefaDAO.save(tarefa);
+            listForAdapter.add(tarefa);
             lista_view.setAdapter(adapter);
 //            adapter.add(nameItem);
 //            lista_view.setAdapter(adapter);
@@ -147,11 +152,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private boolean alreadyExists(String nameItem){
+    private boolean alreadyExists(Tarefa tarefa){
         boolean alreadyExists = false;
 
-        for(String elementOfAdap: listForAdapter){
-            if(elementOfAdap.trim().toLowerCase().equals(nameItem.trim().toLowerCase()) ){
+        for(Tarefa elementOfAdap: listForAdapter){
+            if(elementOfAdap.getTexto().trim().toLowerCase().equals(tarefa.getTexto().trim().toLowerCase()) ){
                 alreadyExists = true;
                 break;
             }
@@ -160,13 +165,16 @@ public class MainActivity extends AppCompatActivity
         return alreadyExists;
     }
     @Override
-    public void onEdit(FragmentActivity activity,String nameItem, int mensagem) {
-       if(alreadyExists(nameItem)){
+    public void onEdit(FragmentActivity activity,Tarefa tarefa,int id, int mensagem) {
+       if(alreadyExists(tarefa)){
            Toast.makeText(activity, R.string.already_exists, Toast.LENGTH_SHORT).show();
        }
-       else if(nameItem.trim().length() > 0){
+       else if(tarefa.getTexto().trim().length() > 0){
             Toast.makeText(activity, mensagem, Toast.LENGTH_SHORT).show();
-            listForAdapter.set(positionToEdit, nameItem);
+            listForAdapter.set(positionToEdit, tarefa);
+
+            tarefa.setId(id);
+            tarefaDAO.update(tarefa);
 
             lista_view.setAdapter(adapter);
         }
@@ -195,8 +203,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         if(item.getItemId() == R.id.context_delete){
-            for(String s:selecionados){
+            for(Tarefa s:selecionados){
                 listForAdapter.remove(s);
+                tarefaDAO.delete(s);
 //                adapter.remove(s);
             }
             lista_view.setAdapter(adapter);
@@ -212,7 +221,7 @@ public class MainActivity extends AppCompatActivity
     public void onDestroyActionMode(ActionMode mode) {
         int count = lista_view.getChildCount();
 
-        selecionados = new ArrayList<String>();
+        selecionados = new ArrayList<Tarefa>();
 
         for(int i = 0; i < count; i++){
             View view = lista_view.getChildAt(i);
@@ -221,15 +230,26 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private boolean doNotContainsSelecionado(Tarefa tarefa){
+        for(Tarefa tarefaSel : selecionados){
+            if(tarefaSel.getTexto() == tarefa.getTexto() && tarefaSel.getId() == tarefa.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        String selecionado = listForAdapter.get(position);
+        Tarefa selecionado = listForAdapter.get(position);
         View view = lista_view.getChildAt(position);
-
+        System.out.println(selecionado.getId() + " "+selecionado.getTexto());
+        System.out.println("CHAMADO: "+position);
         valueToEditItem = selecionado;
         positionToEdit = position;
 
-        if(!selecionados.contains(selecionado)){
+        if(!doNotContainsSelecionado(selecionado)){
+            System.out.println("AQUI TAMBÉM");
             view.setBackgroundColor(Color.parseColor("#0022FF"));
             selecionados.add(selecionado);
 

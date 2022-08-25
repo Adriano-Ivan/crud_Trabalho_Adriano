@@ -18,6 +18,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.example.crud_trabalho_adriano.data.Tarefa;
+
 public class DialogToSaveItem extends DialogFragment implements DialogInterface.OnClickListener {
 
     private onSaveListener saveListener;
@@ -25,16 +27,17 @@ public class DialogToSaveItem extends DialogFragment implements DialogInterface.
     private onEditListener editListener;
     private TextView inputItem;
     private MainActivity.OPERACAO type;
-    private String valueFieldIfIsToEdit;
+    private Tarefa valueFieldIfIsToEdit;
+    private int idIfIsToEdit;
 
     public DialogToSaveItem(MainActivity.OPERACAO type){
-
         this.type = type;
     }
 
-    public DialogToSaveItem(MainActivity.OPERACAO type, String valueFieldIfIsToEdit){
+    public DialogToSaveItem(MainActivity.OPERACAO type, Tarefa valueFieldIfIsToEdit){
         this.type = type;
         this.valueFieldIfIsToEdit = valueFieldIfIsToEdit;
+        this.idIfIsToEdit  = valueFieldIfIsToEdit.getId();
     }
 
     @NonNull
@@ -62,7 +65,7 @@ public class DialogToSaveItem extends DialogFragment implements DialogInterface.
         inputItem.setBackgroundColor(Color.parseColor("#EEEEEE"));
 
         if(valueFieldIfIsToEdit != null){
-            inputItem.setText(valueFieldIfIsToEdit);
+            inputItem.setText(valueFieldIfIsToEdit.getTexto());
         }
 
         return builder.create();
@@ -72,11 +75,13 @@ public class DialogToSaveItem extends DialogFragment implements DialogInterface.
     public void onClick(DialogInterface dialog, int which) {
         if(which == dialog.BUTTON_POSITIVE && valueFieldIfIsToEdit == null){
             String conteudo = String.valueOf(inputItem.getText());
-            saveListener.onSave(getActivity(), conteudo, R.string.sera_salvo);
+            Tarefa tarefa = new Tarefa(conteudo);
+            saveListener.onSave(getActivity(), tarefa, R.string.sera_salvo);
         }
         else if(which == dialog.BUTTON_POSITIVE && valueFieldIfIsToEdit != null){
             String conteudo = String.valueOf(inputItem.getText());
-            editListener.onEdit(getActivity(),conteudo, R.string.sera_editado);
+            Tarefa tarefa = new Tarefa(conteudo);
+            editListener.onEdit(getActivity(),tarefa,idIfIsToEdit, R.string.sera_editado);
         }
         else if(which == dialog.BUTTON_NEGATIVE){
             cancelListener.onCancel(getActivity(),R.string.nao_sera_salvo);
@@ -103,10 +108,10 @@ public class DialogToSaveItem extends DialogFragment implements DialogInterface.
     }
 
     public interface onSaveListener{
-        void onSave(FragmentActivity activity, String conteudo,int mensagem);
+        void onSave(FragmentActivity activity, Tarefa conteudo,int mensagem);
     }
 
     public interface onEditListener{
-        void onEdit(FragmentActivity activity, String conteudo, int mensagem);
+        void onEdit(FragmentActivity activity, Tarefa conteudo,int id, int mensagem);
     }
 }
