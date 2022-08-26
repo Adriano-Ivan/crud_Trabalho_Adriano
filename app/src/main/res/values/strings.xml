@@ -14,6 +14,7 @@
     <string name="dialog_edit_title">Edite o item: </string>
     <string name="sera_editado">O conteudo será editado</string>
     <string name="already_exists">Ja existe</string>
+    <string name="about_me">Sobre mim</string>
     <array name="itens">
 
     </array>

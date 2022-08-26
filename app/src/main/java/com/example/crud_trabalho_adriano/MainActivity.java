@@ -9,6 +9,7 @@ import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -100,6 +101,10 @@ public class MainActivity extends AppCompatActivity
             openSaveCreatedItemDialog();
         } else if(item.getItemId() == R.id.context_edit) {
             openSaveUpdatedItemDialog();
+        }else if(item.getItemId() == R.id.context_about_author){
+            Intent intent = new Intent(this,About.class);
+
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -195,6 +200,7 @@ public class MainActivity extends AppCompatActivity
 
         if(mShowDeleteVisible && mShowEditVisible){
             menu.findItem(R.id.context_add).setVisible(false);
+            menu.findItem(R.id.context_about_author).setVisible(false);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -243,13 +249,12 @@ public class MainActivity extends AppCompatActivity
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
         Tarefa selecionado = listForAdapter.get(position);
         View view = lista_view.getChildAt(position);
-        System.out.println(selecionado.getId() + " "+selecionado.getTexto());
-        System.out.println("CHAMADO: "+position);
+
         valueToEditItem = selecionado;
         positionToEdit = position;
 
         if(!doNotContainsSelecionado(selecionado)){
-            System.out.println("AQUI TAMBÉM");
+
             view.setBackgroundColor(Color.parseColor("#0022FF"));
             selecionados.add(selecionado);
 

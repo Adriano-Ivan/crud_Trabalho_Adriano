@@ -3,6 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/context_about_author"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:menuCategory="secondary"
+
+        android:title="@string/about_me"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/context_add"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/adicionar"
