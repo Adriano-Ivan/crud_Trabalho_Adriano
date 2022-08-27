@@ -4,11 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".About">
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="@string/the_author"
+        android:gravity="center"
+        />
+
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="EU ESTOU AQUI"
+        android:layout_height="110dp"
+        android:src="@drawable/coffee"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="@string/my_contact"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="@string/explanation_app"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:text="@string/version_app"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:text="@string/reserved_rights"
+        android:gravity="center"
         />
 </LinearLayout>

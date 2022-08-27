@@ -15,6 +15,11 @@
     <string name="sera_editado">O conteudo será editado</string>
     <string name="already_exists">Ja existe</string>
     <string name="about_me">Sobre mim</string>
+    <string name="the_author">Autor: Adriano Ivan de Paula Campos</string>
+    <string name="my_contact">Contato: adrianoivandepaulacampos@gmail.com</string>
+    <string name="explanation_app">Este CRUD é o trabalho final da matéria de Dispositivos Móveis</string>
+    <string name="version_app">Versão 1.0.0</string>
+    <string name="reserved_rights">Todos os direitos reservados</string>
     <array name="itens">
 
     </array>
